@@ -1,0 +1,26 @@
+#:kivy 2.1.0
+
+<CraneImage>:
+    pos: self.pos
+    size: self.size
+
+<CraneGui>:    
+    base_color: 0, 0, 0, 1
+    image_size: root.center_x / 4, root.center_y / 4  
+
+    CraneImage:
+        pos: root.center_x / 4, root.height * 3 / 4
+        size: root.center_x / 4, root.center_y / 4  
+        source: "crane_upper_view.jpg"
+            
+    Label:
+        color: root.base_color
+        font_size: 28
+        center_x: root.width * 3 / 4
+        top: root.top - 25
+        text: "Variação XXX"
+
+    Button:
+        center_x: root.width * 3 / 4
+        text: "+"
+        
