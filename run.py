@@ -1,5 +1,5 @@
 import time
-from Interface.CraneInterface import CraneInterface
+from Modules.CraneInterface import CraneInterface
 
 
 if __name__ == "__main__":
