@@ -1,10 +1,10 @@
 import time
 from Modules.CraneOperation.Coppelia.CraneSimulation import CraneSimulation
-
+from Modules.CraneOperation.CraneCreator import CraneCreator
 
 class CraneInterface:
     def __init__(self):
-        self.simulation = CraneSimulation()
+        self.simulation = CraneCreator.create_crane_operation_instance(kind="Coppelia")
         self.simulation.start()
 
     def move_arm(self, velocity: int) -> None:
