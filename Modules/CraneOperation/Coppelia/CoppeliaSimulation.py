@@ -3,11 +3,18 @@ import numpy as np
 
 
 class CoppeliaSimulation:
-    try:
-        sim = RemoteAPIClient().getObject("sim")
-        print("The connection to simulation was established.")
-    except:
-        print("The connection to simulation could not be established.")
+    def __new__(cls, *args, **kwargs):
+        try:
+            return cls.__instance
+        except AttributeError:
+            cls.__instance = super().__new__(cls, *args, **kwargs)
+
+    def __init__(self):
+        try:
+            sim = RemoteAPIClient().getObject("sim")
+            print("The connection to simulation was established.")
+        except:
+            print("The connection to simulation could not be established.")
 
     def start(self):
         self.sim.startSimulation()
