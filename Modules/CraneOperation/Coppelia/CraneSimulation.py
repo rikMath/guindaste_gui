@@ -1,5 +1,5 @@
 import time
-from Modules.Coppelia.CoppeliaSimulation import CoppeliaSimulation, Joint
+from Modules.CraneOperation.Coppelia.CoppeliaSimulation import CoppeliaSimulation, Joint
 
 
 class CraneSimulation:
