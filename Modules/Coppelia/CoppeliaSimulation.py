@@ -1,4 +1,4 @@
-from Modules.Coppelia.zmqRemoteApi import RemoteAPIClient
+from External.zmqRemoteApi import RemoteAPIClient
 import numpy as np
 
 
