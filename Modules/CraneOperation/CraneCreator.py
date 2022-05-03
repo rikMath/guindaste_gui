@@ -1,4 +1,5 @@
-from Modules.CraneOperation.Coppelia import CraneSimulation
+from Modules.CraneOperation.Coppelia.CraneSimulation import CraneSimulation
+
 
 class CraneCreator:
     def __init__(self):
