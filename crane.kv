@@ -4,15 +4,16 @@
     pos: self.pos
     size: self.size
 
-<CraneGui>:    
+<CraneGui>:
     base_color: 0, 0, 0, 1
-    image_size: root.center_x / 4, root.center_y / 4  
+    button_on_off_size: 150, 150
+    image_size: root.center_x / 4, root.center_y / 4
 
     CraneImage:
         pos: root.center_x / 4, root.height * 3 / 4
-        size: root.center_x / 4, root.center_y / 4  
+        size: root.center_x / 4, root.center_y / 4
         source: "crane_upper_view.jpg"
-            
+
     Label:
         color: root.base_color
         font_size: 28
@@ -21,6 +22,13 @@
         text: "Variação XXX"
 
     Button:
+        size: root.button_on_off_size
+        center_x: root.width * 1 / 4
+        center_y: root.height * 1 / 4
+        text: "OFF"
+
+    Button:
+        size: root.button_on_off_size
         center_x: root.width * 3 / 4
-        text: "+"
-        
+        center_y: root.height * 1 / 4
+        text: "ON"
