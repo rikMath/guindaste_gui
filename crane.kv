@@ -7,6 +7,7 @@
 <CraneGui>:
     base_color: 0, 0, 0, 1
     button_on_off_size: 150, 150
+    input_size: 100, 50
     image_size: root.center_x / 4, root.center_y / 4
 
     CraneImage:
@@ -20,6 +21,10 @@
         center_x: root.width * 3 / 4
         top: root.top - 25
         text: "Variação XXX"
+
+    TextInput:
+        pos: root.width * 3 / 4, root.height * 3 / 4
+        size: root.input_size
 
     Button:
         size: root.button_on_off_size
