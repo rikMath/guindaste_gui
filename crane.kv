@@ -12,18 +12,53 @@
 
     CraneImage:
         pos: root.center_x / 4, root.height * 3 / 4
-        size: root.center_x / 4, root.center_y / 4
+        size: root.width / 4, root.height / 6
         source: "crane_upper_view.jpg"
 
     Label:
+        id: upper_arrow_rotation
         color: root.base_color
         font_size: 28
         center_x: root.width * 3 / 4
-        top: root.top - 25
-        text: "Variação XXX"
+        top: root.top
+        text: "Variação Rotação Lança"
+
+    Label:
+        id: label_input_rotation
+        color: root.base_color
+        font_size: 40
+        center_x: root.width * 3 / 4
+        top: root.top - upper_arrow_rotation.height
+        text: "^"
 
     TextInput:
-        pos: root.width * 3 / 4, root.height * 3 / 4
+        pos: root.width * 3 / 4 - label_input_rotation.width / 2, root.height * 3 / 4
+        size: root.input_size
+
+    CraneImage:
+        id: down_arrow_img
+        pos: root.center_x / 4, root.height * 2 / 4
+        size: root.width / 4, root.height / 6
+        source: "crane_upper_view.jpg"
+
+    Label:
+        id: upper_arrow_down
+        color: root.base_color
+        font_size: 28
+        center_x: root.width * 3 / 4
+        top: down_arrow_img.top
+        text: "Variação Descida Lança"
+
+    Label:
+        id: label_input_down
+        color: root.base_color
+        font_size: 40
+        center_x: root.width * 3 / 4
+        top: upper_arrow_down.top - upper_arrow_down.height
+        text: "^"
+
+    TextInput:
+        pos: root.width * 3 / 4 - label_input_down.width / 2, root.height * 2 / 4
         size: root.input_size
 
     Button:
