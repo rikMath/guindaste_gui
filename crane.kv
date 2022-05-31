@@ -7,6 +7,8 @@
 <CraneGui>:
     base_color: 0, 0, 0, 1
     button_on_off_size: 150, 150
+    button_send_reset_size: 150, 75
+    button_arrows_size: 50, 50
     input_size: 100, 50
     image_size: root.center_x / 4, root.center_y / 4
 
@@ -16,24 +18,46 @@
         source: "crane_upper_view.jpg"
 
     Label:
-        id: upper_arrow_rotation
+        id: label_rotation
         color: root.base_color
         font_size: 28
         center_x: root.width * 3 / 4
         top: root.top
         text: "Variação Rotação Lança"
 
-    Label:
-        id: label_input_rotation
-        color: root.base_color
-        font_size: 40
+    Button:
+        id: btn_upper_arrow_rotation
+        size: root.button_arrows_size
         center_x: root.width * 3 / 4
-        top: root.top - upper_arrow_rotation.height
+        top: label_rotation.top - label_rotation.height - 40 - 20
         text: "^"
 
     TextInput:
-        pos: root.width * 3 / 4 - label_input_rotation.width / 2, root.height * 3 / 4
+        id: input_rotation
+        top: btn_upper_arrow_rotation.top - btn_upper_arrow_rotation.height - 20
+        center_x: label_rotation.center_x
         size: root.input_size
+
+    Button:
+        id: btn_botton_arrow_rotation
+        size: root.button_arrows_size
+        center_x: root.width * 3 / 4
+        top: input_rotation.top - input_rotation.height - 20
+        text: "\/"
+
+    Button:
+        id: send_btn_rotation
+        size: root.button_send_reset_size
+        center_x: input_rotation.center_x + self.width
+        center_y: input_rotation.center_y
+        text: "ENVIAR"
+
+    Button:
+        id: reset_btn_rotation
+        size: root.button_send_reset_size
+        center_x: input_rotation.center_x - self.width
+        center_y: input_rotation.center_y
+        text: "RESET"
 
     CraneImage:
         id: down_arrow_img
@@ -42,24 +66,46 @@
         source: "crane_upper_view.jpg"
 
     Label:
-        id: upper_arrow_down
+        id: label_input_down
         color: root.base_color
         font_size: 28
         center_x: root.width * 3 / 4
         top: down_arrow_img.top
         text: "Variação Descida Lança"
 
-    Label:
-        id: label_input_down
-        color: root.base_color
-        font_size: 40
+    Button:
+        id: btn_upper_arrow_down
+        size: root.button_arrows_size
         center_x: root.width * 3 / 4
-        top: upper_arrow_down.top - upper_arrow_down.height
+        top: label_input_down.top - label_input_down.height + 20
         text: "^"
 
     TextInput:
-        pos: root.width * 3 / 4 - label_input_down.width / 2, root.height * 2 / 4
+        id: input_down
+        center_y: root.height * 2 / 4 + 20
+        center_x: label_input_down.center_x
         size: root.input_size
+
+    Button:
+        id: btn_botton_arrow_down
+        size: root.button_arrows_size
+        center_x: root.width * 3 / 4
+        top: input_down.top - input_down.height - 20
+        text: "\/"
+
+    Button:
+        id: send_btn_down
+        size: root.button_send_reset_size
+        center_x: input_down.center_x + self.width
+        center_y: input_down.center_y
+        text: "ENVIAR"
+
+    Button:
+        id: reset_btn_down
+        size: root.button_send_reset_size
+        center_x: input_down.center_x - self.width
+        center_y: input_down.center_y
+        text: "RESET"
 
     Button:
         size: root.button_on_off_size
