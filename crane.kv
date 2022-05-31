@@ -51,6 +51,7 @@
         center_x: input_rotation.center_x + self.width
         center_y: input_rotation.center_y
         text: "ENVIAR"
+        on_press: app.move_arm()
 
     Button:
         id: reset_btn_rotation
@@ -58,6 +59,7 @@
         center_x: input_rotation.center_x - self.width
         center_y: input_rotation.center_y
         text: "RESET"
+        on_press: app.clean_arm_input()
 
     CraneImage:
         id: down_arrow_img

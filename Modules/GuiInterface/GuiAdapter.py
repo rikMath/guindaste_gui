@@ -1,12 +1,16 @@
 from Modules.CraneOperation.CraneInterface import CraneInterfaceFacade
 
 class GuiAdapterKivy:
-    def __new__(cls, *args, **kwargs):
-        try:
-            return cls.__instance
-        except AttributeError:
-            cls.__instance = super().__new__(cls, *args, **kwargs)
-
+    _instance = None
+    def __new__(class_, *args, **kwargs):
+        if not isinstance(class_._instance, class_):
+            class_._instance = object.__new__(class_, *args, **kwargs)
+        return class_._instance
+        
     def __init__(self):
-        self.crane = CraneInterfaceFacade()
+        ...
+        # self.crane = CraneInterfaceFacade()
         # Criar Coppelia e Arduino
+
+    def move_arm(self):
+        print("Moving")
