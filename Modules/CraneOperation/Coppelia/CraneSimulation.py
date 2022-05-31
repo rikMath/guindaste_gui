@@ -1,21 +1,35 @@
 import time
-from Modules.CraneOperation.Coppelia.CoppeliaSimulation import CoppeliaSimulation, Joint
+from Modules.CraneOperation.Coppelia.CoppeliaSimulation import (
+    CoppeliaSimulation,
+    Joint,
+    Magnet,
+)
 
 
 class CraneSimulation:
     def __init__(self):
         self.simulation = CoppeliaSimulation()
-        self.arm_joint = Joint("ArmActuator", is_revolution=True)
-        self.crab_joint = Joint("CrabActuator")
+        self.arm_joint = Joint("Arm_actuator", is_revolution=True)
+        self.crab_joint = Joint("Crab_actuator")
+        self.hoist_joint = Joint("Hoist_actuator")
+        self.magnect = Magnet("suctionPad")
 
     def start(self):
-        self.simulation.start()
+        print("client id: ", self.simulation.start())
+        # self.magnect.actuate()
+        # self.magnect.syscall_sensing()
 
     def move_arm(self, velocity: int):
-        self.arm_joint.set_velocity(velocity)
+        self.arm_joint.set_velocity(0.02 * velocity)
 
     def move_crab(self, velocity: int):
-        self.crab_joint.set_velocity(velocity)
+        self.crab_joint.set_velocity(0.15 * velocity)
+
+    def move_hoist(self, velocity: int):
+        self.hoist_joint.set_velocity(0.2 * velocity)
+
+    def use_magnet(self):
+        self.magnect.actuate()
 
 
 if __name__ == "__main__":
