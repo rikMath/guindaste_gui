@@ -51,6 +51,9 @@ class CraneInterfaceFacade:
     def use_magnet(self) -> None:
         self.simulation.use_magnet()
 
+    def get_proximity(self) -> None:
+        self.simulation.get_proximity()
+
     def move_crab(self, distance: int, kind="Sim") -> None:
         logging.info(f"Moving CRAB -> {distance} cm")
         self._runner[kind]._move_crab(distance)

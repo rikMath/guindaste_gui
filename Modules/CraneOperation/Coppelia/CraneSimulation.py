@@ -3,6 +3,7 @@ from Modules.CraneOperation.Coppelia.CoppeliaSimulation import (
     CoppeliaSimulation,
     Joint,
     Magnet,
+    Sensor,
 )
 
 
@@ -13,6 +14,7 @@ class CraneSimulation:
         self.crab_joint = Joint("Crab_actuator")
         self.hoist_joint = Joint("Hoist_actuator")
         self.magnect = Magnet("suctionPad")
+        self.sensor = Sensor("Sensor")
 
     def start(self):
         print("client id: ", self.simulation.start())
@@ -20,7 +22,7 @@ class CraneSimulation:
         # self.magnect.syscall_sensing()
 
     def move_arm(self, velocity: int):
-        self.arm_joint.set_velocity(0.02 * velocity)
+        self.arm_joint.set_velocity(velocity)
 
     def move_crab(self, velocity: int):
         self.crab_joint.set_velocity(0.15 * velocity)
@@ -30,6 +32,9 @@ class CraneSimulation:
 
     def use_magnet(self):
         self.magnect.actuate()
+
+    def get_proximity(self):
+        self.sensor.get_proximity()
 
 
 # if __name__ == "__main__":

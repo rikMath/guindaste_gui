@@ -41,3 +41,13 @@ class Magnet(CoppeliaSimulation):
 
     def actuate(self):
         self.sim.callScriptFunction("sysCall_cleanup", self.sim.scripttype_mainscript)
+
+
+class Sensor(CoppeliaSimulation):
+    def __init__(self, path: str) -> None:
+        self.path = self.set_format(path)
+        self.handle = self.sim.getObject(self.path)
+
+    def get_proximity(self):
+        self.sim.checkProximitySensor(self.handle, self.sim.handle_all)
+        return self.sim.readProximitySensor(self.handle)
