@@ -8,13 +8,15 @@ logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.DEBUG)
 if __name__ == "__main__":
 
     crane = CraneInterfaceFacade()
-    print(crane.get_proximity())
-    crane.move_arm(90, "Sim")
-    print(crane.get_proximity())
-    crane.move_arm(45, "Sim")
-    print(crane.get_proximity())
-    crane.move_arm(60, "Sim")
-    print(crane.get_proximity())
+    # crane.move_hoist(-0.1)
+    while True:
+        print(crane.get_proximity())
+    # crane.move_arm(90, "Sim")
+    # print(crane.get_proximity())
+    # crane.move_arm(45, "Sim")
+    # print(crane.get_proximity())
+    # crane.move_arm(60, "Sim")
+    # print(crane.get_proximity())
     # crane.move_arm(-90, "Sim")
     # crane.move_crab(-100, "Sim")
     # while True:
