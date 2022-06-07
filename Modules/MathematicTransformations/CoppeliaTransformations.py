@@ -5,10 +5,10 @@ import logging
 
 class CoppeliaControl:
     ARM_VELOCITY = 2
-    CRAB_VELOCITY = 1
+    HOIST_VELOCITY = 1
 
     TIME_TO_COMPLETE_ARM = 70
-    TIME_TO_COMPLETE_CRAB = 10
+    TIME_TO_COMPLETE_HOIST = 10
 
     def __init__(self, crane_simulation):
         """
@@ -16,7 +16,7 @@ class CoppeliaControl:
         """
         self.crane_simulation = crane_simulation
         self.position_arm = 0
-        self.position_crab = 0
+        self.position_hoist = 0
 
     def _calculate_velocity_and_time(
         self,
@@ -25,7 +25,7 @@ class CoppeliaControl:
         velocity: float,
         time_complete: float,
     ):
-    
+
         velocity_with_sign = -velocity if new_position > old_position else velocity
         return velocity_with_sign, abs(
             (new_position - old_position) * time_complete / 360
@@ -60,28 +60,28 @@ class CoppeliaControl:
 
         self.position_arm = 0
 
-    def _move_crab(self, new_position):
-        logging.info(f"CURRENT CRAB POSITION {self.position_crab}")
+    def _move_hoist(self, new_position):
+        logging.info(f"CURRENT HOIST POSITION {self.position_hoist}")
 
         crane_simulation = self.crane_simulation
         velocity, time_sleep = self._calculate_velocity_and_time(
-            self.position_crab,
+            self.position_hoist,
             new_position,
-            self.CRAB_VELOCITY,
-            self.TIME_TO_COMPLETE_CRAB,
+            self.HOIST_VELOCITY,
+            self.TIME_TO_COMPLETE_HOIST,
         )
 
         logging.info(f"Moving Crab with velocity {velocity} for {time_sleep} seconds")
 
-        logging.debug("CRAB STARTED TO MOVE")
-        crane_simulation.move_crab(velocity)
+        logging.debug("HOIST STARTED TO MOVE")
+        crane_simulation.move_hoist(velocity)
 
-        logging.debug("CRAB FINISHED TO MOVE")
+        logging.debug("HOIST FINISHED TO MOVE")
         self._sleep(time_sleep)
-        crane_simulation.move_crab(0)
+        crane_simulation.move_hoist(0)
 
-        self.position_crab = new_position
-        logging.debug(f"NEW CRAB POSITION {new_position}")
+        self.position_hoist = new_position
+        logging.debug(f"NEW HOIST POSITION {new_position}")
 
     def _sleep(self, seconds):
         int_seconds = int(seconds)

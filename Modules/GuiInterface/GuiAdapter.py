@@ -6,9 +6,8 @@ class GuiAdapterKivy:
         if not isinstance(class_._instance, class_):
             class_._instance = object.__new__(class_, *args, **kwargs)
         return class_._instance
-        
+
     def __init__(self):
-        ...
         self.crane = CraneInterfaceFacade()
         # Criar Coppelia e Arduino
 
@@ -17,3 +16,9 @@ class GuiAdapterKivy:
 
     def reset_arm_value(self):
         self.crane.reset_arm("Sim")
+
+    def move_hoist(self, cm_to_move):
+        self.crane.move_hoist(cm_to_move, "Sim")
+
+    def reset_hoist_value(self):
+        self.crane.reset_hoist("Sim")

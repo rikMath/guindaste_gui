@@ -33,9 +33,9 @@ class CraneInterfaceFacade:
         self.arduino_control._move_arm(degree)
         self.simulation_control._move_arm(degree)
 
-    def _move_crab(self, distance):
-        self.arduino_control._move_crab(distance)
-        self.simulation_control._move_crab(distance)
+    def _move_hoist(self, distance):
+        self.arduino_control._move_hoist(distance)
+        self.simulation_control._move_hoist(distance)
 
     def _reset_arm(self):
         self.arduino_control._reset_arm()
@@ -52,9 +52,9 @@ class CraneInterfaceFacade:
         logging.info(f"RESETING ARM VALUE")
         self._runner[kind]._reset_arm()
 
-    def move_crab(self, velocity: int) -> None:
-        self.simulation.move_crab(velocity)
-        self.arduino.move_crab(velocity)
+    def move_hoist(self, velocity: int) -> None:
+        self.simulation.move_hoist(velocity)
+        self.arduino.move_hoist(velocity)
 
     def move_hoist(self, velocity: int) -> None:
         self.simulation.move_hoist(velocity)
@@ -66,7 +66,7 @@ class CraneInterfaceFacade:
     def get_proximity(self) -> float:
         return self.simulation.get_proximity()
 
-    def move_crab(self, distance: int, kind="Sim") -> None:
-        logging.info(f"Moving CRAB -> {distance} cm")
-        self._runner[kind]._move_crab(distance)
-        logging.info(f"CRAB MOVED -> {distance} cm")
+    def move_hoist(self, distance: int, kind="Sim") -> None:
+        logging.info(f"Moving hoist -> {distance} cm")
+        self._runner[kind]._move_hoist(distance)
+        logging.info(f"hoist MOVED -> {distance} cm")
