@@ -33,8 +33,8 @@ class CraneSimulation:
     def use_magnet(self):
         self.magnect.actuate()
 
-    def get_proximity(self):
-        self.sensor.get_proximity()
+    def get_proximity(self) -> float:
+        return self.sensor.get_proximity()
 
 
 # if __name__ == "__main__":

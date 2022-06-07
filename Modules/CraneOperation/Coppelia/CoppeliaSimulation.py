@@ -1,3 +1,4 @@
+from shutil import disk_usage
 from External.zmqRemoteApi import RemoteAPIClient
 import numpy as np
 
@@ -50,4 +51,8 @@ class Sensor(CoppeliaSimulation):
 
     def get_proximity(self):
         self.sim.checkProximitySensor(self.handle, self.sim.handle_all)
-        return self.sim.readProximitySensor(self.handle)
+        response = self.sim.readProximitySensor(self.handle)
+        if response:
+            return response[1]
+        else:
+            return np.inf

@@ -4,7 +4,7 @@ import logging
 
 
 class CoppeliaControl:
-    ARM_VELOCITY = 10
+    ARM_VELOCITY = 2
     CRAB_VELOCITY = 1
 
     TIME_TO_COMPLETE_ARM = 70
