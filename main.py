@@ -4,29 +4,65 @@ from kivy.uix.widget import Widget
 from kivy.core.window import Window
 from kivy.uix.image import Image
 from kivy.graphics import Rectangle
+from kivy.uix.textinput import TextInput
 
 from Modules.GuiInterface.GuiAdapter import GuiAdapterKivy
+
+import re
 
 class CraneGui(Widget):
     Window.clearcolor = (236, 226, 226, 1)
 
 class CraneApp(App):
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(self, *args, **kwargs)
-
+    
     def build(self):
+        self.adapter = GuiAdapterKivy()
+
         return CraneGui()
 
-    def move_arm(self):
-        adapter = GuiAdapterKivy()
-        # degrees_to_move = Achar Graus do input
-        adapter.move_arm()
+    def move_arm(self, root):
+        adapter = self.adapter
+        
+        try:
+            degrees_to_move = round(float(root.ids["input_rotation"].text), 2)
+        except:
+            # Mensagem de erro
+            ...
 
-    def clean_arm_input(self):
-        ...
+        adapter.move_arm(degrees_to_move)
+
+    def clean_arm_input(self, root):
+        adapter = self.adapter
+        adapter.reset_arm_value()
+        root.ids["input_rotation"].text = "0"
 
 class CraneImage(Image):
     pass
+
+class FloatInput(TextInput):
+
+    pat = re.compile('[^0-9]')
+    def insert_text(self, substring, from_undo=False):
+        pat = self.pat
+        
+        if len(self.text) == 0 and substring[0] == "-":
+            append_minus = True
+            substring = substring[1:]
+        else:
+            append_minus = False
+
+        if '.' in self.text:
+            s = re.sub(pat, '', substring)
+        else:
+            s = '.'.join(
+                re.sub(pat, '', s)
+                for s in substring.split('.', 1)
+            )
+
+        if append_minus:
+            s = "-" + s
+
+        return super().insert_text(s, from_undo=from_undo)
 
 if __name__ == '__main__':
     CraneApp().run()

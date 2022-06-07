@@ -27,6 +27,8 @@ class CraneInterfaceFacade:
             "Both": self,
         }
 
+    # Chamadas internas
+
     def _move_arm(self, degree):
         self.arduino_control._move_arm(degree)
         self.simulation_control._move_arm(degree)
@@ -35,10 +37,20 @@ class CraneInterfaceFacade:
         self.arduino_control._move_crab(distance)
         self.simulation_control._move_crab(distance)
 
+    def _reset_arm(self):
+        self.arduino_control._reset_arm()
+        self.simulation_control._reset_arm()
+
+    # Interfaces de comandos
+
     def move_arm(self, degree: float, kind="Sim") -> None:
         logging.info(f"Moving ARM -> {degree} degrees")
         self._runner[kind]._move_arm(degree)
         logging.info(f"ARM MOVED -> {degree} degrees")
+
+    def reset_arm(self, kind="Sim") -> None:
+        logging.info(f"RESETING ARM VALUE")
+        self._runner[kind]._reset_arm()
 
     def move_crab(self, velocity: int) -> None:
         self.simulation.move_crab(velocity)
@@ -50,6 +62,7 @@ class CraneInterfaceFacade:
 
     def use_magnet(self) -> None:
         self.simulation.use_magnet()
+
 
     def get_proximity(self) -> None:
         self.simulation.get_proximity()

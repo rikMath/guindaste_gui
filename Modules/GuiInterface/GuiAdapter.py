@@ -9,8 +9,11 @@ class GuiAdapterKivy:
         
     def __init__(self):
         ...
-        # self.crane = CraneInterfaceFacade()
+        self.crane = CraneInterfaceFacade()
         # Criar Coppelia e Arduino
 
-    def move_arm(self):
-        print("Moving")
+    def move_arm(self, degrees_to_move):
+        self.crane.move_arm(degrees_to_move, "Sim")
+
+    def reset_arm_value(self):
+        self.crane.reset_arm("Sim")

@@ -25,6 +25,7 @@ class CoppeliaControl:
         velocity: float,
         time_complete: float,
     ):
+    
         velocity_with_sign = -velocity if new_position > old_position else velocity
         return velocity_with_sign, abs(
             (new_position - old_position) * time_complete / 360
@@ -51,7 +52,13 @@ class CoppeliaControl:
         crane_simulation.move_arm(0)
 
         self.position_arm = new_position
+
         logging.debug(f"NEW ARM POSITION {new_position}")
+
+    def _reset_arm(self):
+        logging.debug(f"CURRENT ARM POSITION RESET TO 0.0 Degrees")
+
+        self.position_arm = 0
 
     def _move_crab(self, new_position):
         logging.info(f"CURRENT CRAB POSITION {self.position_crab}")
