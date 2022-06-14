@@ -44,6 +44,7 @@ class CraneInterfaceFacade:
     # Interfaces de comandos
 
     def move_arm(self, degree: float, kind="Sim") -> None:
+        print(self._runner[kind]._move_arm)
         logging.info(f"Moving ARM -> {degree} degrees")
         self._runner[kind]._move_arm(degree)
         logging.info(f"ARM MOVED -> {degree} degrees")
@@ -52,16 +53,13 @@ class CraneInterfaceFacade:
         logging.info(f"RESETING ARM VALUE")
         self._runner[kind]._reset_arm()
 
-    def move_hoist(self, velocity: int) -> None:
-        self.simulation.move_hoist(velocity)
-        self.arduino.move_hoist(velocity)
-
-    def move_hoist(self, velocity: int) -> None:
-        self.simulation.move_hoist(velocity)
-        # self.arduino.move_hoist(velocity)
-
-    def use_magnet(self) -> None:
-        self.simulation.use_magnet()
+    # def move_hoist(self, velocity: int) -> None:
+    #     self.simulation.move_hoist(velocity)
+    #     self.arduino.move_hoist(velocity)
+    #
+    # def move_hoist(self, velocity: int) -> None:
+    #     self.simulation.move_hoist(velocity)
+    #     # self.arduino.move_hoist(velocity)
 
     def get_proximity(self) -> float:
         return self.simulation.get_proximity()
@@ -70,3 +68,13 @@ class CraneInterfaceFacade:
         logging.info(f"Moving hoist -> {distance} cm")
         self._runner[kind]._move_hoist(distance)
         logging.info(f"hoist MOVED -> {distance} cm")
+
+    def activate_magnet(self, kind="Sim"):
+        logging.info(f"ACTIVATING MAGNET")
+        self._runner[kind]._use_magnet(True)
+        logging.info(f"MAGNET ACTIVATED")
+
+    def deactivate_magnet(self, kind="Sim"):
+        logging.info(f"DEACTIVATING MAGNET")
+        self._runner[kind]._use_magnet(False)
+        logging.info(f"MAGNET DEACTIVATED")

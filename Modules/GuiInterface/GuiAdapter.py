@@ -22,3 +22,9 @@ class GuiAdapterKivy:
 
     def reset_hoist_value(self):
         self.crane.reset_hoist("Sim")
+
+    def activate_magnet(self):
+        self.crane.activate_magnet("Sim")
+
+    def deactivate_magnet(self):
+        self.crane.deactivate_magnet("Sim")

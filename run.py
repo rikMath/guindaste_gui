@@ -8,7 +8,11 @@ logging.basicConfig(format="%(asctime)s - %(message)s", level=logging.DEBUG)
 if __name__ == "__main__":
 
     crane = CraneInterfaceFacade()
-    # crane.move_hoist(-0.1)
+    # crane.move_hoist(100)
+    # crane.activate_magnet()
+    # time.sleep(1)
+    # crane.move_hoist(0)
+    # crane.activate_magnet()
     while True:
         print(crane.get_proximity())
     # crane.move_arm(90, "Sim")

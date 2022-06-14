@@ -17,6 +17,7 @@ class CoppeliaControl:
         self.crane_simulation = crane_simulation
         self.position_arm = 0
         self.position_hoist = 0
+        self.magnet_state = False
 
     def _calculate_velocity_and_time(
         self,
@@ -82,6 +83,18 @@ class CoppeliaControl:
 
         self.position_hoist = new_position
         logging.debug(f"NEW HOIST POSITION {new_position}")
+
+    def _use_magnet(self, new_state: bool):
+        crane_simulation = self.crane_simulation
+
+        # if new_state and not self.magnet_state:
+        #     crane_simulation.use_magnet()
+        # if not new_state and self.magnet_state:
+        #     crane_simulation.use_magnet()
+
+        crane_simulation.use_magnet()
+
+        self.magnet_state = new_state
 
     def _sleep(self, seconds):
         int_seconds = int(seconds)
