@@ -41,10 +41,13 @@ class CraneInterfaceFacade:
         self.arduino_control._reset_arm()
         self.simulation_control._reset_arm()
 
+    def _reset_hoist(self):
+        self.arduino_control._reset_hoist()
+        self.simulation_control._reset_hoist()
+
     # Interfaces de comandos
 
     def move_arm(self, degree: float, kind="Sim") -> None:
-        print(self._runner[kind]._move_arm)
         logging.info(f"Moving ARM -> {degree} degrees")
         self._runner[kind]._move_arm(degree)
         logging.info(f"ARM MOVED -> {degree} degrees")
@@ -52,6 +55,10 @@ class CraneInterfaceFacade:
     def reset_arm(self, kind="Sim") -> None:
         logging.info(f"RESETING ARM VALUE")
         self._runner[kind]._reset_arm()
+
+    def reset_hoist(self, kind="Sim") -> None:
+        logging.info(f"RESETING ARM VALUE")
+        self._runner[kind]._reset_hoist()
 
     # def move_hoist(self, velocity: int) -> None:
     #     self.simulation.move_hoist(velocity)

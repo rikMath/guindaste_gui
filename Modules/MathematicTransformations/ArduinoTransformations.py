@@ -65,6 +65,10 @@ class ArduinoControl:
 
         logging.debug(f"NEW ARM POSITION {new_position}")
 
+    def _reset_arm(self):
+        logging.debug(f"CURRENT ARM POSITION RESET TO 0.0 cm")
+
+        self.position_arm = 0
 
     def _move_hoist(self, new_position):
         logging.debug(f"CURRENT HOIST POSITION {self.position_hoist}")
@@ -75,6 +79,11 @@ class ArduinoControl:
         micro.send_data(current_payload)
 
         logging.debug(f"NEW HOIST POSITION {new_position}")
+
+    def _reset_hoist(self):
+        logging.debug(f"CURRENT HOIST POSITION RESET TO 0.0 cm")
+
+        self.position_hoist = 0
 
     def _use_magnet(self, new_state):
         logging.debug(f"CURRENT MAGNET STATE {self.magnet_state}")

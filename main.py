@@ -6,6 +6,8 @@ from kivy.uix.image import Image
 from kivy.graphics import Rectangle
 from kivy.uix.textinput import TextInput
 
+from kivymd.app import MDApp
+
 from Modules.GuiInterface.GuiAdapter import GuiAdapterKivy
 
 import re
@@ -13,7 +15,7 @@ import re
 class CraneGui(Widget):
     Window.clearcolor = (236, 226, 226, 1)
 
-class CraneApp(App):
+class CraneApp(MDApp):
 
     def build(self):
         self.adapter = GuiAdapterKivy()
