@@ -29,29 +29,31 @@ class ArduinoControl:
             degrees = kwargs["degrees"]
 
             dir1 = "1" if self.position_arm < degrees else "0"
-            steps = str(int(degrees * self.STEPS_TO_DEGREE))
+            steps = str(abs(int(degrees * self.STEPS_TO_DEGREE)))
 
             motor1 = "9999" if len(steps) > 4 else steps.zfill(4)
 
             self.position_arm = degrees
 
-        else if kind == "move_hoist":
+        elif kind == "move_hoist":
             cm = kwargs["cm"]
 
-            dir2 = "1" if self.position_hoist < degrees else "0"
-            steps = str(int(degrees * self.STEPS_TO_CM))
+            dir2 = "1" if self.position_hoist < cm else "0"
+            steps = str(abs(int(cm * self.STEPS_TO_CM)))
 
             motor2 = "9999" if len(steps) > 4 else steps.zfill(4)
 
             self.position_hoist = cm
 
-        else if kind == "activate_magnet":
+        elif kind == "activate_magnet":
             magnet = "1" if kwargs["activate_magnet"] else "0"
 
             self.magnet_state = kwargs["activate_magnet"]
 
 
-        return id + aut + relay + dir1 + motor1 + dir2 + motor2 + magnet
+        self.id += 1
+
+        return id + aut + relay + dir1 + motor1 + dir2 + motor2 + magnet + '\n'
 
     def _move_arm(self, new_position):
         logging.debug(f"CURRENT ARM POSITION {self.position_arm}")
@@ -63,6 +65,10 @@ class ArduinoControl:
 
         logging.debug(f"NEW ARM POSITION {new_position}")
 
+    def _reset_arm(self):
+        logging.debug(f"CURRENT ARM POSITION RESET TO 0.0 cm")
+
+        self.position_arm = 0
 
     def _move_hoist(self, new_position):
         logging.debug(f"CURRENT HOIST POSITION {self.position_hoist}")
@@ -74,7 +80,12 @@ class ArduinoControl:
 
         logging.debug(f"NEW HOIST POSITION {new_position}")
 
-    def _activate_magnet(self, new_state):
+    def _reset_hoist(self):
+        logging.debug(f"CURRENT HOIST POSITION RESET TO 0.0 cm")
+
+        self.position_hoist = 0
+
+    def _use_magnet(self, new_state):
         logging.debug(f"CURRENT MAGNET STATE {self.magnet_state}")
 
         micro = self.micro

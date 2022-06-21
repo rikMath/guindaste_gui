@@ -12,25 +12,34 @@
     input_size: 100, 50
     image_size: root.center_x / 4, root.center_y / 4
 
+    canvas.before:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source: 'imageedit_2_8553011006.png'
+
     CraneImage:
+        id: rotation_img
         pos: root.center_x / 4, root.height * 3 / 4
         size: root.width / 4, root.height / 6
         source: "crane_upper_view.jpg"
 
-    Label:
+    MDLabel:
         id: label_rotation
         color: root.base_color
         font_size: 28
         center_x: root.width * 3 / 4
         top: root.top
-        text: "Variação Rotação Lança"
+        halign: "center"
+        text: "Braço (graus)"
+        bold: True
 
-    Button:
+    MDIconButton:
         id: btn_upper_arrow_rotation
         size: root.button_arrows_size
         center_x: root.width * 3 / 4
-        top: label_rotation.top - label_rotation.height - 40 - 20
-        text: "^"
+        top: label_rotation.top - label_rotation.height
+        icon: "arrow-up"
 
     FloatInput:
         id: input_rotation
@@ -38,85 +47,168 @@
         center_x: label_rotation.center_x
         size: root.input_size
 
-    Button:
+    MDIconButton:
         id: btn_botton_arrow_rotation
         size: root.button_arrows_size
         center_x: root.width * 3 / 4
         top: input_rotation.top - input_rotation.height - 20
-        text: "\/"
+        icon: "arrow-down"
 
-    Button:
+    MDRectangleFlatButton:
         id: send_btn_rotation
         size: root.button_send_reset_size
         center_x: input_rotation.center_x + self.width
         center_y: input_rotation.center_y
         text: "ENVIAR"
         on_press: app.move_arm(root)
+        text_color: 0, 0, 0, 1
+        line_color: 0, 0, 0, 1
+        bold: True
 
-    Button:
+    MDRectangleFlatButton:
         id: reset_btn_rotation
         size: root.button_send_reset_size
         center_x: input_rotation.center_x - self.width
         center_y: input_rotation.center_y
         text: "RESET"
         on_press: app.clean_arm_input(root)
+        text_color: 0, 0, 0, 1
+        line_color: 0, 0, 0, 1
+        bold: True
 
-    # CraneImage:
-    #     id: down_arrow_img
-    #     pos: root.center_x / 4, root.height * 2 / 4
-    #     size: root.width / 4, root.height / 6
-    #     source: "crane_upper_view.jpg"
+    Widget:
+        id: separator_1
+        pos: 0, root.height * 3 / 4 - down_arrow_img.height/2
+        size_hint_y: None
+        height: 6
+        canvas:
+            Color:
+                rgb: 0., 0., 0.
+            Rectangle:
+                pos: 0, separator_1.center_y
+                size: root.width, 2
 
-    # Label:
-    #     id: label_input_down
-    #     color: root.base_color
-    #     font_size: 28
-    #     center_x: root.width * 3 / 4
-    #     top: down_arrow_img.top
-    #     text: "Variação Descida Lança"
+    CraneImage:
+        id: down_arrow_img
+        pos: root.center_x / 4, root.height * 2 / 4 - 30
+        size: root.width / 4, root.height / 6
+        source: "crane_side_view.jpeg"
 
-    # Button:
-    #     id: btn_upper_arrow_down
-    #     size: root.button_arrows_size
-    #     center_x: root.width * 3 / 4
-    #     top: label_input_down.top - label_input_down.height + 20
-    #     text: "^"
+    MDLabel:
+        id: label_input_down
+        color: root.base_color
+        font_size: 28
+        center_x: root.width * 3 / 4
+        top: down_arrow_img.top + 30
+        halign: "center"
+        text: "Lança (cm)"
+        bold: True
 
-    # FloatInput:
-    #     id: input_down
-    #     center_y: root.height * 2 / 4 + 20
-    #     center_x: label_input_down.center_x
-    #     size: root.input_size
+    MDIconButton:
+        id: btn_upper_arrow_down
+        size: root.button_arrows_size
+        center_x: root.width * 3 / 4
+        top: label_input_down.top - label_input_down.height + 20
+        icon: "arrow-up"
 
-    # Button:
-    #     id: btn_botton_arrow_down
-    #     size: root.button_arrows_size
-    #     center_x: root.width * 3 / 4
-    #     top: input_down.top - input_down.height - 20
-    #     text: "\/"
+    FloatInput:
+        id: input_down
+        center_y: root.height * 2 / 4 + 20
+        center_x: label_input_down.center_x
+        size: root.input_size
 
-    # Button:
-    #     id: send_btn_down
-    #     size: root.button_send_reset_size
-    #     center_x: input_down.center_x + self.width
-    #     center_y: input_down.center_y
-    #     text: "ENVIAR"
+    MDIconButton:
+        id: btn_botton_arrow_down
+        size: root.button_arrows_size
+        center_x: root.width * 3 / 4
+        top: input_down.top - input_down.height - 20
+        icon: "arrow-down"
 
-    # Button:
-    #     id: reset_btn_down
-    #     size: root.button_send_reset_size
-    #     center_x: input_down.center_x - self.width
-    #     center_y: input_down.center_y
-    #     text: "RESET"
+    MDRectangleFlatButton:
+        id: send_btn_down
+        size: root.button_send_reset_size
+        center_x: input_down.center_x + self.width
+        center_y: input_down.center_y
+        text: "ENVIAR"
+        on_press: app.move_hoist(root)
+        text_color: 0, 0, 0, 1
+        line_color: 0, 0, 0, 1
+        bold: True
 
-    # Button:
-    #     size: root.button_on_off_size
-    #     center_x: root.width * 1 / 4
-    #     center_y: root.height * 1 / 4
-    #     text: "OFF"
+    MDRectangleFlatButton:
+        id: reset_btn_down
+        size: root.button_send_reset_size
+        center_x: input_down.center_x - self.width
+        center_y: input_down.center_y
+        text: "RESET"
+        on_press: app.clean_hoist_input(root)
+        text_color: 0, 0, 0, 1
+        line_color: 0, 0, 0, 1
+        bold: True
 
-    # Button:
-    #     size: root.button_on_off_size
-    #     center_x: root.width * 3 / 4
-    #     center_y: root.height * 1 / 4
-    #     text: "ON"
+    Widget:
+        id: separator_2
+        pos: 0, root.height * 2 / 4 - down_arrow_img.height/2
+        size_hint_y: None
+        height: 6
+        canvas:
+            Color:
+                rgb: 0., 0., 0.
+            Rectangle:
+                pos: 0, separator_2.center_y
+                size: root.width, 2
+
+    Button:
+        # MDRoundFlatButton
+        size: root.button_on_off_size
+        center_x: root.width * 1 / 4
+        center_y: root.height * 1 / 4
+        text: "OFF"
+        on_press: app.deactivate_magnet()
+        custom_color: 1, 0, 0, 1
+        background_color: 1, 0, 0 ,1
+
+    Button:
+        id: on_magnet
+        size: root.button_on_off_size
+        center_x: root.width * 3 / 4
+        center_y: root.height * 1 / 4
+        text: "ON"
+        on_press: app.activate_magnet()
+        background_color: 0, 1, 0, 1
+
+    Widget:
+        id: separator_3
+        pos: 0, root.height * 1 / 4 - down_arrow_img.height/2
+        size_hint_y: None
+        height: 6
+        canvas:
+            Color:
+                rgb: 0., 0., 0.
+            Rectangle:
+                pos: 0, separator_3.center_y
+                size: root.width, 2
+
+    Label:
+        id: magnet_state
+        color: root.base_color
+        font_size: 28
+        center_x: root.width * 1 / 4
+        top: on_magnet.top - on_magnet.height -50
+        text: "Estado Imã: On"
+
+    Label:
+        id: arm_state
+        color: root.base_color
+        font_size: 28
+        center_x: root.width * 2 / 4
+        top: on_magnet.top - on_magnet.height -50
+        text: "Posição Braço: 0.0"
+
+    Label:
+        id: hoist_state
+        color: root.base_color
+        font_size: 28
+        center_x: root.width * 3 / 4
+        top: on_magnet.top - on_magnet.height -50
+        text: "Posição Lança: 0.0"
