@@ -10,11 +10,12 @@ class CoppeliaControl:
     TIME_TO_COMPLETE_ARM = 70
     TIME_TO_COMPLETE_HOIST = 10
 
-    def __init__(self, crane_simulation):
+    def __init__(self, crane_simulation, crane_app):
         """
         Utilizaremos o valor em graus para o braço
         """
         self.crane_simulation = crane_simulation
+        self.crane_app = crane_app
         self.position_arm = 0
         self.position_hoist = 0
         self.magnet_state = False

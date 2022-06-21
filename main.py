@@ -8,6 +8,8 @@ from kivy.uix.textinput import TextInput
 
 from kivymd.app import MDApp
 
+import sys
+
 from Modules.GuiInterface.GuiAdapter import GuiAdapterKivy
 
 import re
@@ -18,7 +20,9 @@ class CraneGui(Widget):
 class CraneApp(MDApp):
 
     def build(self):
-        self.adapter = GuiAdapterKivy()
+        run_kind = sys.argv[1] if len(sys.argv) > 1 else "Sim"
+
+        self.adapter = GuiAdapterKivy(run_kind, self)
 
         return CraneGui()
 
@@ -28,8 +32,8 @@ class CraneApp(MDApp):
         try:
             degrees_to_move = round(float(root.ids["input_rotation"].text), 2)
         except:
+            ...
             # Mensagem de erro
-            pass
 
         adapter.move_arm(degrees_to_move)
 

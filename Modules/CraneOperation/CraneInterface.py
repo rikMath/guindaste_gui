@@ -6,18 +6,26 @@ import logging
 
 
 class CraneInterfaceFacade:
-    def __init__(self):
-        self.simulation = sim = CraneCreator.create_crane_operation_instance(
-            kind="Coppelia"
-        )
-        sim.start()
+    def __init__(self, run_kind, crane_app):
+        self.crane_app = crane_app
 
-        self.simulation_control = CoppeliaControl(sim)
+        if run_kind == "Sim" or run_kind == "Both":
+            self.simulation = sim = CraneCreator.create_crane_operation_instance(
+                kind="Coppelia"
+            )
+            sim.start()
+        else:
+            self.simulation = sim = None
 
-        self.arduino = micro = CraneCreator.create_crane_operation_instance(
-            kind="Arduino"
-        )
-        micro.start()
+        self.simulation_control = CoppeliaControl(sim, crane_app)
+
+        if run_kind == "Micro" or run_kind == "Both":
+            self.arduino = micro = CraneCreator.create_crane_operation_instance(
+                kind="Arduino"
+            )
+            micro.start()
+        else:
+            self.arduino = micro = None
 
         self.arduino_control = ArduinoControl(micro)
 
