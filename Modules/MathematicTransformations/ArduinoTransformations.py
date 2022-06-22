@@ -3,8 +3,10 @@ import logging
 class ArduinoControl:
     STEPS_TO_DEGREE = 1
     STEPS_TO_CM = 1
+    RECEIVE_BYTE_LENGTH = 19
 
-    def __init__(self, micro):
+    def __init__(self, micro, crane_app):
+        self.crane_app = crane_app
         self.micro = micro
         self.position_arm = 0
         self.position_hoist = 0
@@ -13,15 +15,15 @@ class ArduinoControl:
 
     def _get_payload_string(self, kind: str, **kwargs):
         """
-            PADRÃO: 'id(3) autonomo(1) relé(1)	dir1(1)	motor1(4) dir2(1) motor2(4) eletroima(1)'
+            PADRÃO: 'id(3) autonomo(1) relé(1)	dir1(1)	motor1(5) dir2(1) motor2(5) eletroima(1)'
         """
         id = str(self.id).zfill(3)
         aut = "0"
         relay = "0"
         dir1 = "0"
-        motor1 = "0000"
+        motor1 = "00000"
         dir2 = "0"
-        motor2 = "0000"
+        motor2 = "00000"
         magnet = "0"
 
 
@@ -31,7 +33,7 @@ class ArduinoControl:
             dir1 = "1" if self.position_arm < degrees else "0"
             steps = str(abs(int(degrees * self.STEPS_TO_DEGREE)))
 
-            motor1 = "9999" if len(steps) > 4 else steps.zfill(4)
+            motor1 = "9999" if len(steps) > 5 else steps.zfill(5)
 
             self.position_arm = degrees
 
@@ -41,7 +43,7 @@ class ArduinoControl:
             dir2 = "1" if self.position_hoist < cm else "0"
             steps = str(abs(int(cm * self.STEPS_TO_CM)))
 
-            motor2 = "9999" if len(steps) > 4 else steps.zfill(4)
+            motor2 = "9999" if len(steps) > 5 else steps.zfill(5)
 
             self.position_hoist = cm
 
@@ -62,6 +64,7 @@ class ArduinoControl:
         current_payload = self._get_payload_string(kind="move_arm", degrees=new_position)
 
         micro.send_data(current_payload)
+        self.receive_data()
 
         logging.debug(f"NEW ARM POSITION {new_position}")
 
@@ -94,3 +97,30 @@ class ArduinoControl:
         micro.send_data(current_payload)
 
         logging.debug(f"NEW MAGNET STATE {new_state}")
+
+    # COMANDOS DE FEEDBACK - SOCK LISTEN #
+    def treat_received_data(self, received_data):
+        # Atualizar GUI
+        logging.info(received_data)
+
+    def is_finished(self, received_data):
+        if received_data[16] == "0" and received_data[17] == "0":
+            return True
+        return False
+
+    def receive_data(self):
+        self.micro.flush_data()
+
+        while True:
+            received_data = bytearray()
+
+            while True:
+                received_data += self.micro.receive_data()
+                if len(received_data) >= self.RECEIVE_BYTE_LENGTH:
+                    break
+
+            decoded_data = received_data.decode("utf-8")
+            self.treat_received_data(decoded_data)
+
+            if self.is_finished(decoded_data):
+                break

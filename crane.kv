@@ -193,22 +193,34 @@
         id: magnet_state
         color: root.base_color
         font_size: 28
-        center_x: root.width * 1 / 4
+        center_x: root.width * 1 / 5
         top: on_magnet.top - on_magnet.height -50
         text: "Estado Imã: On"
+        bold: True
 
     Label:
         id: arm_state
         color: root.base_color
         font_size: 28
-        center_x: root.width * 2 / 4
+        center_x: root.width * 2 / 5
         top: on_magnet.top - on_magnet.height -50
         text: "Posição Braço: 0.0"
+        bold: True
 
     Label:
         id: hoist_state
         color: root.base_color
         font_size: 28
-        center_x: root.width * 3 / 4
-        top: on_magnet.top - on_magnet.height -50
+        center_x: root.width * 3 / 5
+        top: on_magnet.top - on_magnet.height - 50
         text: "Posição Lança: 0.0"
+        bold: True
+
+    Label:
+        id: sensor_state
+        color: root.base_color
+        font_size: 28
+        center_x: root.width * 4 / 5
+        top: on_magnet.top - on_magnet.height - 50
+        text: "Sensor Distância: -"
+        bold: True

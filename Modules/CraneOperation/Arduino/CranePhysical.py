@@ -10,12 +10,19 @@ class CranePhisycal:
         bd_addr = '44:17:93:F9:48:72'
         # bd_addr = '78:37:16:45:4A:D2'
         port = 1
-        # self.arduino.connect((bd_addr,port))
+        # backlog = 1
+        self.arduino.connect((bd_addr,port))
+        # self.arduino.listen(backlog)
 
     def send_data(self, payload: str):
         sock = self.arduino
-        print(payload)
-        # sock.send(payload.encode())
+        sock.send(payload.encode())
 
-    # def reeive_data(self, velocity: int):
-    #     ...
+    def receive_data(self):
+        size = 1024
+        return self.arduino.recv(size)
+
+    def flush_data(self):
+        while True:
+            if not self.receive_data():
+                break
