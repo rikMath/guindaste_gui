@@ -109,7 +109,9 @@ class ArduinoControl:
         return False
 
     def receive_data(self):
+        logging.info("Flushing Bluetooth Data")
         self.micro.flush_data()
+        logging.info("Receiving Bluetooth Data")
 
         while True:
             received_data = bytearray()
