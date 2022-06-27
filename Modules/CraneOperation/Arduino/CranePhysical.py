@@ -1,5 +1,7 @@
 import sys
 import bluetooth
+import time
+import socket
 
 class CranePhisycal:
     def __init__(self):
@@ -8,14 +10,20 @@ class CranePhisycal:
 
     def start(self):
         bd_addr = '44:17:93:F9:48:72'
-        # bd_addr = '78:37:16:45:4A:D2'
         port = 1
-        # self.arduino.connect((bd_addr,port))
+        self.arduino.connect((bd_addr,port))
 
     def send_data(self, payload: str):
         sock = self.arduino
-        print(payload)
-        # sock.send(payload.encode())
+        sock.send(payload.encode())
 
-    # def reeive_data(self, velocity: int):
-    #     ...
+    def receive_data(self):
+        size = 1024
+        return self.arduino.recv(size)
+
+    def flush_data(self):
+        ...
+        # while True:
+        #     data = self.arduino.recv(1024)
+        #     if len(data) == 0:
+        #         break

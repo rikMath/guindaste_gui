@@ -1,4 +1,5 @@
 import time
+import numpy as np
 from Modules.CraneOperation.Coppelia.CoppeliaSimulation import (
     CoppeliaSimulation,
     Joint,
@@ -24,11 +25,19 @@ class CraneSimulation:
     def move_arm(self, velocity: int):
         self.arm_joint.set_velocity(velocity)
 
+    def get_arm_angle(self):
+        # Retorno em Graus
+        return round(np.rad2deg(self.arm_joint.get_position()), 2)
+
     def move_crab(self, velocity: int):
         self.crab_joint.set_velocity(0.15 * velocity)
 
     def move_hoist(self, velocity: int):
         self.hoist_joint.set_velocity(0.2 * velocity)
+
+    def get_hoist_distance(self):
+        # Retorno em Cm
+        return round(self.hoist_joint.get_position(), 2)
 
     def use_magnet(self):
         self.magnect.actuate()

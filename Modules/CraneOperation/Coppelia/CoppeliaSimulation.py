@@ -34,6 +34,8 @@ class Joint(CoppeliaSimulation):
         else:
             self.sim.setJointTargetVelocity(self.handle, velocity)
 
+    def get_position(self):
+        return self.sim.getJointPosition(self.handle)
 
 class Magnet(CoppeliaSimulation):
     def __init__(self, path: str):

@@ -102,12 +102,27 @@ class CoppeliaControl:
 
         self.magnet_state = new_state
 
-    def _thread_sleep_auxiliar(self, remaining_seconds):
-        ...
+    def treat_coppelia_data(self):
+        root = self.crane_app.root
+
+        new_arm_position = self.crane_simulation.get_arm_angle()
+        new_hoist_position = self.crane_simulation.get_hoist_distance()
+        new_sensor_position = self.crane_simulation.get_proximity()
+
+        root.ids['arm_state'].text = f"Posição Braço: {abs(new_arm_position)%360}"
+        root.ids['hoist_state'].text = f"Posição Lança: {abs(new_hoist_position)}"
+        root.ids['sensor_state'].text = f"Posição Sensor: {abs(new_sensor_position)}"
+
+        logging.info(f"Arm -> {new_arm_position} degrees, {root.ids['arm_state'].text}")
+        logging.info(f"Hoist -> {new_arm_position} cm, {root.ids['hoist_state'].text}")
+        logging.info(f"Sensor -> {new_sensor_position} cm, {root.ids['sensor_state'].text}")
 
     def _sleep(self, seconds):
-        int_seconds = int(seconds)
-        for _ in range(int_seconds):
-            logging.info(f"PROXIMITY SENSOR: {self.crane_simulation.get_proximity()}")
-            time.sleep(1)
-        time.sleep(seconds - int_seconds)
+        start_process = time.time()
+
+        while True:
+            if time.time() - start_process >= seconds:
+                break
+            self.treat_coppelia_data()
+
+        self.treat_coppelia_data() # Para dados finais

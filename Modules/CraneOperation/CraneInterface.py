@@ -7,8 +7,6 @@ import logging
 
 class CraneInterfaceFacade:
     def __init__(self, run_kind, crane_app):
-        self.crane_app = crane_app
-
         if run_kind == "Sim" or run_kind == "Both":
             self.simulation = sim = CraneCreator.create_crane_operation_instance(
                 kind="Coppelia"
@@ -27,7 +25,7 @@ class CraneInterfaceFacade:
         else:
             self.arduino = micro = None
 
-        self.arduino_control = ArduinoControl(micro)
+        self.arduino_control = ArduinoControl(micro, crane_app)
 
         self._runner = {
             "Sim": self.simulation_control,
