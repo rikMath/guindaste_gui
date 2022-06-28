@@ -11,9 +11,9 @@ from Modules.CraneOperation.Coppelia.CoppeliaSimulation import (
 class CraneSimulation:
     def __init__(self):
         self.simulation = CoppeliaSimulation()
-        self.arm_joint = Joint("Arm_actuator", is_revolution=True)
-        self.crab_joint = Joint("Crab_actuator")
-        self.hoist_joint = Joint("Hoist_actuator")
+        self.arm_joint = Joint("Torre_joint", is_revolution=True)
+        # self.crab_joint = Joint("Crab_actuator")
+        self.hoist_joint = Joint("Ferramenta_actuator")
         self.magnect = Magnet("suctionPad")
         self.sensor = Sensor("Sensor")
 
@@ -44,15 +44,3 @@ class CraneSimulation:
 
     def get_proximity(self) -> float:
         return self.sensor.get_proximity()
-
-
-# if __name__ == "__main__":
-
-#     crane = CraneSimulation()
-#     crane.start()
-#     crane.move_arm(10)
-#     while True:
-#         crane.move_crab(1)
-#         time.sleep(5)
-#         crane.move_crab(-1)
-#         time.sleep(5)

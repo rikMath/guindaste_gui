@@ -37,6 +37,7 @@ class Joint(CoppeliaSimulation):
     def get_position(self):
         return self.sim.getJointPosition(self.handle)
 
+
 class Magnet(CoppeliaSimulation):
     def __init__(self, path: str):
         self.path = self.set_format(path)
@@ -52,8 +53,8 @@ class Sensor(CoppeliaSimulation):
         self.handle = self.sim.getObject(self.path)
 
     def get_proximity(self):
-        self.sim.checkProximitySensor(self.handle, self.sim.handle_all)
-        response = self.sim.readProximitySensor(self.handle)
+        response = self.sim.checkProximitySensor(self.handle, self.sim.handle_all)
+        # response = self.sim.readProximitySensor(self.handle)
         if response:
             return response[1]
         else:
