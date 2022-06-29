@@ -61,7 +61,9 @@ class ArduinoControl:
         logging.debug(f"CURRENT ARM POSITION {self.position_arm}")
 
         micro = self.micro
-        current_payload = self._get_payload_string(kind="move_arm", degrees=new_position)
+        current_payload = self._get_payload_string(kind="move_arm", degrees=new_position-self.position_arm)
+
+        self.position_arm = new_position
 
         micro.send_data(current_payload)
         self.receive_data()
@@ -77,8 +79,9 @@ class ArduinoControl:
         logging.debug(f"CURRENT HOIST POSITION {self.position_hoist}")
 
         micro = self.micro
-        current_payload = self._get_payload_string(kind="move_hoist", cm=new_position)
+        current_payload = self._get_payload_string(kind="move_hoist", cm=new_position-self.position_hoist)
 
+        self.position_hoist = new_position
         micro.send_data(current_payload)
 
         logging.debug(f"NEW HOIST POSITION {new_position}")
@@ -104,7 +107,7 @@ class ArduinoControl:
         logging.info(received_data)
 
     def is_finished(self, received_data):
-        if received_data[16] == "0" and received_data[17] == "0":
+        if received_data[16] == "2" and received_data[17] == "2":
             return True
         return False
 

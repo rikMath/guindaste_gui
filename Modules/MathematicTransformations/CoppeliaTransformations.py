@@ -4,11 +4,11 @@ import logging
 
 
 class CoppeliaControl:
-    ARM_VELOCITY = 2
+    ARM_VELOCITY = 10
     HOIST_VELOCITY = 1
 
-    TIME_TO_COMPLETE_ARM = 70
-    TIME_TO_COMPLETE_HOIST = 10
+    TIME_TO_COMPLETE_ARM = 50
+    TIME_TO_COMPLETE_HOIST = 5
 
     def __init__(self, crane_simulation, crane_app):
         """
@@ -20,7 +20,7 @@ class CoppeliaControl:
         self.position_hoist = 0
         self.magnet_state = False
 
-    def _calculate_velocity_and_time(
+    def _calculate_velocity_and_time_arm(
         self,
         old_position: float,
         new_position: float,
@@ -33,11 +33,24 @@ class CoppeliaControl:
             (new_position - old_position) * time_complete / 360
         )
 
+    def _calculate_velocity_and_time_hoist(
+        self,
+        old_position: float,
+        new_position: float,
+        velocity: float,
+        time_complete: float,
+    ):
+
+        velocity_with_sign = -velocity if new_position > old_position else velocity
+        return -velocity_with_sign, abs(
+            (new_position - old_position) * time_complete
+        )
+
     def _move_arm(self, new_position):
         logging.info(f"CURRENT ARM POSITION {self.position_arm}")
 
         crane_simulation = self.crane_simulation
-        velocity, time_sleep = self._calculate_velocity_and_time(
+        velocity, time_sleep = self._calculate_velocity_and_time_arm(
             self.position_arm,
             new_position,
             self.ARM_VELOCITY,
@@ -48,7 +61,7 @@ class CoppeliaControl:
         crane_simulation.move_arm(velocity)
 
         logging.info("ARM STARTED TO MOVE")
-        self._sleep(time_sleep)
+        self._sleep(time_sleep, kind="arm")
 
         logging.info("ARM FINISHED TO MOVE")
         crane_simulation.move_arm(0)
@@ -65,8 +78,11 @@ class CoppeliaControl:
     def _move_hoist(self, new_position):
         logging.info(f"CURRENT HOIST POSITION {self.position_hoist}")
 
+        if new_position >= 2.7:
+            new_position = 2.7
+
         crane_simulation = self.crane_simulation
-        velocity, time_sleep = self._calculate_velocity_and_time(
+        velocity, time_sleep = self._calculate_velocity_and_time_hoist(
             self.position_hoist,
             new_position,
             self.HOIST_VELOCITY,
@@ -77,9 +93,10 @@ class CoppeliaControl:
 
         logging.info("HOIST STARTED TO MOVE")
         crane_simulation.move_hoist(velocity)
+        # crane_simulation.move_hoist_by_position(new_position)
 
         logging.info("HOIST FINISHED TO MOVE")
-        self._sleep(time_sleep)
+        self._sleep(time_sleep, kind="hoist")
         crane_simulation.move_hoist(0)
 
         self.position_hoist = new_position
@@ -117,12 +134,12 @@ class CoppeliaControl:
         logging.info(f"Hoist -> {new_arm_position} cm, {root.ids['hoist_state'].text}")
         logging.info(f"Sensor -> {new_sensor_position} cm, {root.ids['sensor_state'].text}")
 
-    def _sleep(self, seconds):
+    def _sleep(self, seconds, kind=None):
         start_process = time.time()
 
         while True:
             if time.time() - start_process >= seconds:
                 break
-            self.treat_coppelia_data()
+            # self.treat_coppelia_data()
 
         self.treat_coppelia_data() # Para dados finais

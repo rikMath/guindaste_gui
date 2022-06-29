@@ -28,6 +28,10 @@ class Joint(CoppeliaSimulation):
         self.handle = self.sim.getObject(self.path)
         self.is_revolution = is_revolution
 
+    def set_position(self, new_position):
+        print(f"\n\nChanging position: {new_position}\n\n")
+        self.sim.setJointTargetPosition(self.handle, new_position)
+
     def set_velocity(self, velocity: int):
         if self.is_revolution:
             self.sim.setJointTargetVelocity(self.handle, np.deg2rad(velocity))
