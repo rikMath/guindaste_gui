@@ -29,9 +29,8 @@ class CoppeliaControl:
     ):
 
         velocity_with_sign = -velocity if new_position > old_position else velocity
-        return velocity_with_sign, abs(
-            (new_position - old_position) * time_complete / 360
-        )
+        return velocity_with_sign, abs((new_position - old_position) / velocity)
+        # return velocity_with_sign, abs((new_position - old_position) * time_complete)
 
     def _move_arm(self, new_position):
         logging.info(f"CURRENT ARM POSITION {self.position_arm}")
@@ -109,13 +108,15 @@ class CoppeliaControl:
         new_hoist_position = self.crane_simulation.get_hoist_distance()
         new_sensor_position = self.crane_simulation.get_proximity()
 
-        root.ids['arm_state'].text = f"Posição Braço: {abs(new_arm_position)%360}"
-        root.ids['hoist_state'].text = f"Posição Lança: {abs(new_hoist_position)}"
-        root.ids['sensor_state'].text = f"Posição Sensor: {abs(new_sensor_position)}"
+        root.ids["arm_state"].text = f"Posição Braço: {abs(new_arm_position)%360}"
+        root.ids["hoist_state"].text = f"Posição Lança: {abs(new_hoist_position)}"
+        root.ids["sensor_state"].text = f"Posição Sensor: {abs(new_sensor_position)}"
 
         logging.info(f"Arm -> {new_arm_position} degrees, {root.ids['arm_state'].text}")
         logging.info(f"Hoist -> {new_arm_position} cm, {root.ids['hoist_state'].text}")
-        logging.info(f"Sensor -> {new_sensor_position} cm, {root.ids['sensor_state'].text}")
+        logging.info(
+            f"Sensor -> {new_sensor_position} cm, {root.ids['sensor_state'].text}"
+        )
 
     def _sleep(self, seconds):
         start_process = time.time()
@@ -125,4 +126,4 @@ class CoppeliaControl:
                 break
             self.treat_coppelia_data()
 
-        self.treat_coppelia_data() # Para dados finais
+        self.treat_coppelia_data()  # Para dados finais

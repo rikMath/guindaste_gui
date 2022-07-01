@@ -12,6 +12,7 @@ class CoppeliaSimulation:
         sim = RemoteAPIClient().getObject("sim")
         print("The connection to simulation was established.")
     except:
+
         print("The connection to simulation could not be established.")
 
     def start(self):
@@ -30,21 +31,30 @@ class Joint(CoppeliaSimulation):
 
     def set_velocity(self, velocity: int):
         if self.is_revolution:
-            self.sim.setJointTargetVelocity(self.handle, np.deg2rad(velocity))
+            print(self.sim.setJointTargetPosition(self.handle, np.deg2rad(velocity)))
         else:
-            self.sim.setJointTargetVelocity(self.handle, velocity)
+            self.sim.setJointTargetPosition(self.handle, velocity)
+
+    def get_position(self):
+        return self.sim.getJointTargetPosition(self.handle)
 
     def get_position(self):
         return self.sim.getJointPosition(self.handle)
 
 
 class Magnet(CoppeliaSimulation):
-    def __init__(self, path: str):
+    def __init__(self, path: str, target: str = "Moeda", sensor: str = "Sensor"):
         self.path = self.set_format(path)
         self.handle = self.sim.getObject(self.path)
+        self.target = self.sim.getObject(self.set_format(target))
+        self.sensor = self.sim.getObject(self.set_format(sensor))
 
-    def actuate(self):
-        self.sim.callScriptFunction("sysCall_cleanup", self.sim.scripttype_mainscript)
+    def turn_on(self):
+        self.sim.setObjectParent(self.target, self.handle, True)
+
+    def turn_off(self):
+        if self.sim.getObjectChild(self.handle, 0) != -1:
+            self.sim.setObjectParent(self.sim.getObjectChild(self.handle, 0), -1, True)
 
 
 class Sensor(CoppeliaSimulation):

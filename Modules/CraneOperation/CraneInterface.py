@@ -66,14 +66,6 @@ class CraneInterfaceFacade:
         logging.info(f"RESETING ARM VALUE")
         self._runner[kind]._reset_hoist()
 
-    # def move_hoist(self, velocity: int) -> None:
-    #     self.simulation.move_hoist(velocity)
-    #     self.arduino.move_hoist(velocity)
-    #
-    # def move_hoist(self, velocity: int) -> None:
-    #     self.simulation.move_hoist(velocity)
-    #     # self.arduino.move_hoist(velocity)
-
     def get_proximity(self) -> float:
         return self.simulation.get_proximity()
 
