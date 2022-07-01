@@ -22,8 +22,8 @@ class CraneSimulation:
     def move_arm(self, velocity: int):
         self.arm_joint.set_velocity(velocity)
 
-    def get_arm_position(self):
-        return self.arm_joint.get_position()
+    def move_arm_by_position(self, position: float):
+        self.arm_joint.set_position(position)
 
     def get_arm_angle(self):
         # Retorno em Graus
@@ -34,6 +34,9 @@ class CraneSimulation:
 
     def move_hoist(self, velocity: int):
         self.hoist_joint.set_velocity(velocity)
+
+    def move_hoist_by_position(self, position: float):
+        self.hoist_joint.set_position(position)
 
     def get_hoist_distance(self):
         # Retorno em Cm

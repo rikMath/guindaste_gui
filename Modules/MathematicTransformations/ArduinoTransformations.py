@@ -61,7 +61,9 @@ class ArduinoControl:
         logging.debug(f"CURRENT ARM POSITION {self.position_arm}")
 
         micro = self.micro
-        current_payload = self._get_payload_string(kind="move_arm", degrees=new_position)
+        current_payload = self._get_payload_string(kind="move_arm", degrees=new_position-self.position_arm)
+
+        self.position_arm = new_position
 
         micro.send_data(current_payload)
         self.receive_data()
@@ -77,9 +79,12 @@ class ArduinoControl:
         logging.debug(f"CURRENT HOIST POSITION {self.position_hoist}")
 
         micro = self.micro
-        current_payload = self._get_payload_string(kind="move_hoist", cm=new_position)
+        current_payload = self._get_payload_string(kind="move_hoist", cm=new_position-self.position_hoist)
+
+        self.position_hoist = new_position
 
         micro.send_data(current_payload)
+        self.receive_data()
 
         logging.debug(f"NEW HOIST POSITION {new_position}")
 
@@ -102,9 +107,19 @@ class ArduinoControl:
     def treat_received_data(self, received_data):
         # Atualizar GUI
         logging.info(received_data)
+        dist1 = received_data[4:9]
+        dist2 = received_data[9:14]
+
+        mean_dist = round((int(dist1) + int(dist2)) / 2000, 2)
+
+        self.crane_app.root.ids['sensor_state'].text = f"Posição Sensor: {abs(mean_dist)}"
+
+    def set_finished_data(self):
+        self.crane_app.root.ids['arm_state'].text = f"Posição Braço: {self.position_arm}"
+        self.crane_app.root.ids['hoist_state'].text = f"Posição Lança: {self.position_hoist}"
 
     def is_finished(self, received_data):
-        if received_data[16] == "0" and received_data[17] == "0":
+        if received_data[16] == "2" or received_data[17] == "2":
             return True
         return False
 
@@ -126,3 +141,5 @@ class ArduinoControl:
 
             if self.is_finished(decoded_data):
                 break
+
+        self.set_finished_data()
