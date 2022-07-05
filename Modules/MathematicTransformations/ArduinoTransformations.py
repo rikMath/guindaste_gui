@@ -65,6 +65,8 @@ class ArduinoControl:
 
         self.position_arm = new_position
 
+        logging.info(f"Sending current payload: {current_payload}")
+
         micro.send_data(current_payload)
         self.receive_data()
 
@@ -109,10 +111,17 @@ class ArduinoControl:
         logging.info(received_data)
         dist1 = received_data[4:9]
         dist2 = received_data[9:14]
+        mag_bool = received_data[14]
 
-        mean_dist = round((int(dist1) + int(dist2)) / 2000, 2)
+        mean_dist = round((int(dist1) + int(dist2)) / 20, 2)
 
         self.crane_app.root.ids['sensor_state'].text = f"Posição Sensor: {abs(mean_dist)}"
+
+        self.magnet_state = int(mag_bool) == 1
+
+        state = "On" if self.magnet_state else "Off"
+        
+        self.crane_app.root.ids['magnet_state'].text = f"Estado Imã: {state}"
 
     def set_finished_data(self):
         self.crane_app.root.ids['arm_state'].text = f"Posição Braço: {self.position_arm}"

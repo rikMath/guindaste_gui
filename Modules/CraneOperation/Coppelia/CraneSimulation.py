@@ -7,7 +7,6 @@ from Modules.CraneOperation.Coppelia.CoppeliaSimulation import (
     Sensor,
 )
 
-
 class CraneSimulation:
     def __init__(self):
         self.simulation = CoppeliaSimulation()
@@ -49,7 +48,7 @@ class CraneSimulation:
         self.magnect.turn_off()
 
     def get_proximity(self) -> float:
-        return self.sensor.get_proximity()
+        return round(self.sensor.get_proximity(), 2)
 
 
 if __name__ == "__main__":

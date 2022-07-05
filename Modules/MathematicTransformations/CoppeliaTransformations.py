@@ -1,14 +1,14 @@
 import time
 from threading import Timer
 import logging
-
+from multiprocessing.pool import Pool
 
 class CoppeliaControl:
-    ARM_VELOCITY = 10
+    ARM_VELOCITY = 1
     HOIST_VELOCITY = 1
 
-    TIME_TO_COMPLETE_ARM = 50
-    TIME_TO_COMPLETE_HOIST = 5
+    TIME_TO_COMPLETE_ARM = 75
+    TIME_TO_COMPLETE_HOIST = 6
 
     def __init__(self, crane_simulation, crane_app):
         """
@@ -29,7 +29,7 @@ class CoppeliaControl:
     ):
 
         velocity_with_sign = -velocity if new_position > old_position else velocity
-        return velocity_with_sign, abs((new_position - old_position) / velocity)
+        return velocity_with_sign, abs((new_position - old_position) / 360 * time_complete)
         # return velocity_with_sign, abs((new_position - old_position) * time_complete)
 
     def _calculate_velocity_and_time_hoist(
@@ -41,9 +41,7 @@ class CoppeliaControl:
     ):
 
         velocity_with_sign = -velocity if new_position > old_position else velocity
-        return -velocity_with_sign, abs(
-            (new_position - old_position) * time_complete
-        )
+        return -velocity_with_sign, abs((new_position - old_position) / 27 * time_complete)
 
     def _move_arm(self, new_position):
         logging.info(f"CURRENT ARM POSITION {self.position_arm}")
@@ -57,13 +55,13 @@ class CoppeliaControl:
         )
 
         logging.info(f"Moving Arm with velocity {velocity} for {time_sleep} seconds")
-        crane_simulation.move_arm(velocity)
+        crane_simulation.move_arm(new_position)
 
         logging.info("ARM STARTED TO MOVE")
         self._sleep(time_sleep, kind="arm")
 
         logging.info("ARM FINISHED TO MOVE")
-        crane_simulation.move_arm(0)
+        # crane_simulation.move_arm(0)
 
         self.position_arm = new_position
 
@@ -77,8 +75,8 @@ class CoppeliaControl:
     def _move_hoist(self, new_position):
         logging.info(f"CURRENT HOIST POSITION {self.position_hoist}")
 
-        if new_position >= 2.7:
-            new_position = 2.7
+        if new_position >= 27:
+            new_position = 27
 
         crane_simulation = self.crane_simulation
         velocity, time_sleep = self._calculate_velocity_and_time_hoist(
@@ -91,12 +89,10 @@ class CoppeliaControl:
         logging.info(f"Moving Crab with velocity {velocity} for {time_sleep} seconds")
 
         logging.info("HOIST STARTED TO MOVE")
-        crane_simulation.move_hoist(velocity)
-        # crane_simulation.move_hoist_by_position(new_position)
+        crane_simulation.move_hoist(new_position/10)
 
         logging.info("HOIST FINISHED TO MOVE")
-        self._sleep(time_sleep, kind="hoist")
-        crane_simulation.move_hoist(0)
+        self._sleep(time_sleep)
 
         self.position_hoist = new_position
         logging.info(f"NEW HOIST POSITION {new_position}")
@@ -110,13 +106,13 @@ class CoppeliaControl:
         crane_simulation = self.crane_simulation
 
         if new_state and not self.magnet_state:
-            crane_simulation.use_magnet()
+            crane_simulation.turn_on()
         if not new_state and self.magnet_state:
-            crane_simulation.use_magnet()
-
-        crane_simulation.use_magnet()
+            crane_simulation.turn_off()
 
         self.magnet_state = new_state
+
+        self.treat_coppelia_data()
 
     def treat_coppelia_data(self):
         root = self.crane_app.root
@@ -125,15 +121,15 @@ class CoppeliaControl:
         new_hoist_position = self.crane_simulation.get_hoist_distance()
         new_sensor_position = self.crane_simulation.get_proximity()
 
-        root.ids["arm_state"].text = f"Posição Braço: {abs(new_arm_position)%360}"
-        root.ids["hoist_state"].text = f"Posição Lança: {abs(new_hoist_position)}"
-        root.ids["sensor_state"].text = f"Posição Sensor: {abs(new_sensor_position)}"
+        root.ids["arm_state"].text = f"Posição Braço: {round(abs(new_arm_position)%360, 2)}"
+        root.ids["hoist_state"].text = f"Posição Lança: {round(abs(new_hoist_position*10), 2)}"
+        root.ids["sensor_state"].text = f"Posição Sensor: {round(abs(new_sensor_position)*10, 2)}"
+        state = "On" if self.magnet_state else "Off"
+        root.ids["magnet_state"].text = f"Estado Imã: {state}"
 
         logging.info(f"Arm -> {new_arm_position} degrees, {root.ids['arm_state'].text}")
         logging.info(f"Hoist -> {new_arm_position} cm, {root.ids['hoist_state'].text}")
-        logging.info(
-            f"Sensor -> {new_sensor_position} cm, {root.ids['sensor_state'].text}"
-        )
+        logging.info(f"Sensor -> {new_sensor_position} cm, {root.ids['sensor_state'].text}")
 
     def _sleep(self, seconds, kind=None):
         start_process = time.time()
@@ -141,6 +137,8 @@ class CoppeliaControl:
         while True:
             if time.time() - start_process >= seconds:
                 break
+            # with Pool(4) as p:
+            #     p.map(download, links)
             # self.treat_coppelia_data()
 
         self.treat_coppelia_data()  # Para dados finais

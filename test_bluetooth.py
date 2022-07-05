@@ -4,8 +4,8 @@ import bluetooth
 # devices = bluetooth.discover_devices(lookup_names=True)
 # print(devices)
 
-bd_addr = '78:37:16:45:4A:D2'
-port = bluetooth.PORT_ANY
+bd_addr = '44:17:93:F9:48:72'
+port = 1
 sock = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 sock.connect((bd_addr,port))
 
