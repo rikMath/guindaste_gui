@@ -1,7 +1,7 @@
 from Modules.CraneOperation.CraneInterface import CraneInterfaceFacade
 
-class GuiAdapterKivy:
 
+class GuiAdapterKivy:
     def __init__(self, run_kind, crane_app):
         self.run_kind = run_kind
 
@@ -25,3 +25,6 @@ class GuiAdapterKivy:
 
     def deactivate_magnet(self):
         self.crane.deactivate_magnet(self.run_kind)
+
+    def get_proximity(self):
+        return self.crane.get_proximity()
