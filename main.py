@@ -29,8 +29,6 @@ class CraneApp(MDApp):
 
         self.adapter = GuiAdapterKivy(run_kind, self)
 
-        Clock.schedule_interval(self.update_label, 1)
-
         return CraneGui()
 
     def move_arm(self, root):
@@ -70,32 +68,6 @@ class CraneApp(MDApp):
 
     def deactivate_magnet(self):
         self.adapter.deactivate_magnet()
-
-    def update_label(self, dt):
-        # root = self.crane_app.root
-
-        # new_arm_position = self.crane_simulation.get_arm_angle()
-        # new_hoist_position = self.crane_simulation.get_hoist_distance()
-        new_sensor_position = self.adapter.get_proximity()
-
-        # root.ids[
-        #     "arm_state"
-        # ].text = f"Posição Braço: {round(abs(new_arm_position)%360, 2)}"
-        # root.ids[
-        #     "hoist_state"
-        # ].text = f"Posição Lança: {round(abs(new_hoist_position*10), 2)}"
-        self.root.ids[
-            "sensor_state"
-        ].text = f"Posição Sensor: {round(abs(new_sensor_position)*10, 2)}"
-        # state = "On" if self.magnet_state else "Off"
-        # root.ids["magnet_state"].text = f"Estado Imã: {state}"
-
-        # logging.info(f"Arm -> {new_arm_position} degrees, {root.ids['arm_state'].text}")
-        # logging.info(f"Hoist -> {new_arm_position} cm, {root.ids['hoist_state'].text}")
-        logging.info(
-            f"Sensor -> {new_sensor_position} cm, {self.root.ids['sensor_state'].text}"
-        )
-
 
 class CraneImage(Image):
     pass

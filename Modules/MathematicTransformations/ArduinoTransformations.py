@@ -117,15 +117,15 @@ class ArduinoControl:
 
         self.crane_app.root.ids['sensor_state'].text = f"Posição Sensor: {abs(mean_dist)}"
 
-        self.magnet_state = int(mag_bool) == 1
-
-        state = "On" if self.magnet_state else "Off"
-        
-        self.crane_app.root.ids['magnet_state'].text = f"Estado Imã: {state}"
+        # self.magnet_state = int(mag_bool) == 1
+        #
+        # state = "On" if self.magnet_state else "Off"
+        #
+        # self.crane_app.root.ids['magnet_state'].text = f"Estado Imã: {state}"
 
     def set_finished_data(self):
-        self.crane_app.root.ids['arm_state'].text = f"Posição Braço: {self.position_arm}"
-        self.crane_app.root.ids['hoist_state'].text = f"Posição Lança: {self.position_hoist}"
+        self.crane_app.root.ids['arm_state'].text = f"Giro Braço: {self.position_arm}"
+        self.crane_app.root.ids['hoist_state'].text = f"Altura Ferramenta: {self.position_hoist}"
 
     def is_finished(self, received_data):
         if received_data[16] == "2" or received_data[17] == "2":

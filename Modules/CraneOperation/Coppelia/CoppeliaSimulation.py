@@ -51,10 +51,11 @@ class Magnet(CoppeliaSimulation):
         self.path = self.set_format(path)
         self.handle = self.sim.getObject(self.path)
         self.target = self.sim.getObject(self.set_format(target))
-        self.sensor = self.sim.getObject(self.set_format(sensor))
+        self.sensor = Sensor(sensor)
 
     def turn_on(self):
-        self.sim.setObjectParent(self.target, self.handle, True)
+        if self.sensor.get_proximity() <= 0.1:
+            self.sim.setObjectParent(self.target, self.handle, True)
 
     def turn_off(self):
         if self.sim.getObjectChild(self.handle, 0) != -1:

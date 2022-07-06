@@ -1,7 +1,8 @@
 import time
 from threading import Timer
 import logging
-from multiprocessing.pool import Pool
+
+from kivy.clock import Clock
 
 class CoppeliaControl:
     ARM_VELOCITY = 1
@@ -19,6 +20,9 @@ class CoppeliaControl:
         self.position_arm = 0
         self.position_hoist = 0
         self.magnet_state = False
+
+        if crane_simulation:
+            Clock.schedule_interval(self.treat_coppelia_data, 1)
 
     def _calculate_velocity_and_time_arm(
         self,
@@ -58,7 +62,7 @@ class CoppeliaControl:
         crane_simulation.move_arm(new_position)
 
         logging.info("ARM STARTED TO MOVE")
-        self._sleep(time_sleep, kind="arm")
+        self.treat_coppelia_data()
 
         logging.info("ARM FINISHED TO MOVE")
         # crane_simulation.move_arm(0)
@@ -92,7 +96,7 @@ class CoppeliaControl:
         crane_simulation.move_hoist(new_position/10)
 
         logging.info("HOIST FINISHED TO MOVE")
-        self._sleep(time_sleep)
+        self.treat_coppelia_data()
 
         self.position_hoist = new_position
         logging.info(f"NEW HOIST POSITION {new_position}")
@@ -114,15 +118,15 @@ class CoppeliaControl:
 
         self.treat_coppelia_data()
 
-    def treat_coppelia_data(self):
+    def treat_coppelia_data(self, dt=None):
         root = self.crane_app.root
 
         new_arm_position = self.crane_simulation.get_arm_angle()
         new_hoist_position = self.crane_simulation.get_hoist_distance()
         new_sensor_position = self.crane_simulation.get_proximity()
 
-        root.ids["arm_state"].text = f"Posição Braço: {round(abs(new_arm_position)%360, 2)}"
-        root.ids["hoist_state"].text = f"Posição Lança: {round(abs(new_hoist_position*10), 2)}"
+        root.ids["arm_state"].text = f"Giro Braço: {round(abs(new_arm_position)%360, 2)}"
+        root.ids["hoist_state"].text = f"Altura Ferramenta: {round(abs(new_hoist_position*10), 2)}"
         root.ids["sensor_state"].text = f"Posição Sensor: {round(abs(new_sensor_position)*10, 2)}"
         state = "On" if self.magnet_state else "Off"
         root.ids["magnet_state"].text = f"Estado Imã: {state}"
@@ -130,15 +134,3 @@ class CoppeliaControl:
         logging.info(f"Arm -> {new_arm_position} degrees, {root.ids['arm_state'].text}")
         logging.info(f"Hoist -> {new_arm_position} cm, {root.ids['hoist_state'].text}")
         logging.info(f"Sensor -> {new_sensor_position} cm, {root.ids['sensor_state'].text}")
-
-    def _sleep(self, seconds, kind=None):
-        start_process = time.time()
-
-        while True:
-            if time.time() - start_process >= seconds:
-                break
-            # with Pool(4) as p:
-            #     p.map(download, links)
-            # self.treat_coppelia_data()
-
-        self.treat_coppelia_data()  # Para dados finais
