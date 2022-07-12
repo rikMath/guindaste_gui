@@ -108,7 +108,7 @@ class ArduinoControl:
     # COMANDOS DE FEEDBACK - SOCK LISTEN #
     def treat_received_data(self, received_data):
         # Atualizar GUI
-        logging.info(received_data)
+        logging.info(f"Current Received Data {received_data}")
         dist1 = received_data[4:9]
         dist2 = received_data[9:14]
         mag_bool = received_data[14]
@@ -117,11 +117,11 @@ class ArduinoControl:
 
         self.crane_app.root.ids['sensor_state'].text = f"Posição Sensor: {abs(mean_dist)}"
 
-        # self.magnet_state = int(mag_bool) == 1
-        #
-        # state = "On" if self.magnet_state else "Off"
-        #
-        # self.crane_app.root.ids['magnet_state'].text = f"Estado Imã: {state}"
+        self.magnet_state = mag_bool == '1'
+
+        state = "On" if self.magnet_state else "Off"
+
+        self.crane_app.root.ids['magnet_state'].text = f"Estado Imã: {state}"
 
     def set_finished_data(self):
         self.crane_app.root.ids['arm_state'].text = f"Giro Braço: {self.position_arm}"

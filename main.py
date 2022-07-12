@@ -8,8 +8,6 @@ from kivy.uix.textinput import TextInput
 
 from kivymd.app import MDApp
 
-from kivy.clock import Clock
-
 import sys
 
 from Modules.GuiInterface.GuiAdapter import GuiAdapterKivy
