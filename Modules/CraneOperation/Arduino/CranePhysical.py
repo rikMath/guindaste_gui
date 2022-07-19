@@ -22,7 +22,7 @@ class CranePhisycal:
         return self.arduino.recv(size)
 
     def flush_data(self):
-        ...
+        time.sleep(1)
         # while True:
         #     data = self.arduino.recv(1024)
         #     if len(data) == 0:

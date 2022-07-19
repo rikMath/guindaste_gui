@@ -1,7 +1,8 @@
 import logging
+from time import sleep
 
 class ArduinoControl:
-    STEPS_TO_DEGREE = 1
+    STEPS_TO_DEGREE = 11.25
     STEPS_TO_CM = 1
     RECEIVE_BYTE_LENGTH = 19
 
@@ -30,22 +31,22 @@ class ArduinoControl:
         if kind == "move_arm":
             degrees = kwargs["degrees"]
 
-            dir1 = "1" if self.position_arm < degrees else "0"
+            dir1 = "1" if self.position_arm < (self.position_arm + degrees) else "0"
             steps = str(abs(int(degrees * self.STEPS_TO_DEGREE)))
 
             motor1 = "9999" if len(steps) > 5 else steps.zfill(5)
 
-            self.position_arm = degrees
+            self.position_arm += degrees
 
         elif kind == "move_hoist":
             cm = kwargs["cm"]
 
-            dir2 = "1" if self.position_hoist < cm else "0"
+            dir2 = "1" if self.position_hoist < (self.position_hoist + cm) else "0"
             steps = str(abs(int(cm * self.STEPS_TO_CM)))
 
             motor2 = "9999" if len(steps) > 5 else steps.zfill(5)
 
-            self.position_hoist = cm
+            self.position_hoist += cm
 
         elif kind == "activate_magnet":
             magnet = "1" if kwargs["activate_magnet"] else "0"
@@ -54,6 +55,15 @@ class ArduinoControl:
 
 
         self.id += 1
+
+        logging.info(f"id: {id}")
+        logging.info(f"aut: {aut}")
+        logging.info(f"relay: {relay}")
+        logging.info(f"dir1: {dir1}")
+        logging.info(f"motor1: {motor1}")
+        logging.info(f"dir2: {dir2}")
+        logging.info(f"motor2: {motor2}")
+        logging.info(f"magnet: {magnet}")
 
         return id + aut + relay + dir1 + motor1 + dir2 + motor2 + magnet + '\n'
 
@@ -102,6 +112,7 @@ class ArduinoControl:
         current_payload = self._get_payload_string(kind="activate_magnet", activate_magnet=new_state)
 
         micro.send_data(current_payload)
+        self.receive_data()
 
         logging.debug(f"NEW MAGNET STATE {new_state}")
 
@@ -124,11 +135,12 @@ class ArduinoControl:
         self.crane_app.root.ids['magnet_state'].text = f"Estado Imã: {state}"
 
     def set_finished_data(self):
+        logging.info("FINISHED DATA")
         self.crane_app.root.ids['arm_state'].text = f"Giro Braço: {self.position_arm}"
         self.crane_app.root.ids['hoist_state'].text = f"Altura Ferramenta: {self.position_hoist}"
 
     def is_finished(self, received_data):
-        if received_data[16] == "2" or received_data[17] == "2":
+        if (received_data[16] == "2" and not received_data[17] == "1") or (not received_data[16] == "1" and received_data[17] == "2"):
             return True
         return False
 
